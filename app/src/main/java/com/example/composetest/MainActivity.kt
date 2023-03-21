@@ -20,9 +20,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = colors.background
                 ) {
-                    SleepTimeChart(values = hours)
+                    /*SleepTimeChart(values = hours)*/
 
-                    /*SleepQualityChart()*/
+                    SleepQualityChart()
 
                 }
             }

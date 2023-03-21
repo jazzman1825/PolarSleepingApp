@@ -4,16 +4,20 @@ import android.graphics.PointF
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 
 private fun lineChartData() = listOf(
@@ -24,7 +28,13 @@ private fun lineChartData() = listOf(
 @Composable
 fun SleepQualityChart() {
 
-    Column() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
 
         Card(
@@ -32,14 +42,24 @@ fun SleepQualityChart() {
             shape = RoundedCornerShape(8.dp)
 
         ) {
-            Row(){
-                Column(){
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Week Statistics",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp)
+
+            Row() {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(60.dp),
+                    modifier = Modifier.padding(16.dp)
+                ) {
                     Text(text = "Deep")
                     Text(text = "REM")
                     Text(text = "Light")
-                    Text(text = "Hours:")
                 }
-                Column(){
+                Column() {
                     Column(
                         modifier = Modifier
                             .padding(16.dp)
@@ -68,13 +88,17 @@ fun SleepQualityChart() {
                                 drawLine(
                                     start = Offset(points[i].x, points[i].y),
                                     end = Offset(points[i + 1].x, points[i + 1].y),
-                                    color = Color(0xFF3F51B5),
+                                    color = Color(4278978742),
                                     strokeWidth = 8f
                                 )
                             }
                         }
                     }
-                    Row(){
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        Text(text = "Hours:")
                         Text(text = "1")
                         Text(text = "2")
                         Text(text = "3")
@@ -104,12 +128,22 @@ fun SleepQualityChart() {
                 }
             }
         }
+        }
         Card(
             backgroundColor = MaterialTheme.colors.secondary,
             shape = RoundedCornerShape(8.dp)
-                ){
+        ){
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Text(text = "You need to get more sleep.",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp)
 
-                Text(text = "You need to get more deep sleep.")
+            }
         }
     }
+
     }

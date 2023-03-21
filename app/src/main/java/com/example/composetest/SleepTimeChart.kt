@@ -22,7 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+
+
+
 
 
 val hours = listOf<Float>(4f, 7.5f, 8f, 12.3f, 10.6f, 6f, 7.2f)
