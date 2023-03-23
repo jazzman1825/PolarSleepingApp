@@ -44,9 +44,14 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+
 }
 
 dependencies {
+    def nav_version = "2.5.3"
+
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
