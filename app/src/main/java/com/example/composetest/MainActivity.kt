@@ -1,5 +1,8 @@
 package com.example.composetest
 
+import android.accounts.Account
+import android.accounts.AccountManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,7 +11,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -18,7 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
 import com.example.composetest.ui.theme.ComposeTestTheme
+import kotlinx.coroutines.*
 import net.openid.appauth.*
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 
@@ -27,7 +37,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         service = AuthorizationService(this)
-        Log.d("log","test2")
         setContent {
             ComposeTestTheme {
                 // A surface container using the 'background' color from the theme
@@ -35,19 +44,32 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Button(onClick = { auth() }) {
-                        Text(text = "auth")
+                    Column(Modifier.fillMaxWidth()) {
+                        Button(onClick = {auth()}) {
+                            Text("auth")
+                        }
+                        Button(onClick = {
+                            val sharedPref = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                            val scope = MainScope()
+                            val token = sharedPref.getString("token", "default_value")
+                            scope.launch {
+                                val sleepData = getSleep(token!!)
+                                Log.d("sleep", sleepData)
+                            }
+
+                        }) {
+                            Text("sleep")
+                        }
                     }
+
                 }
             }
         }
     }
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        Log.d("log","test1")
         if (it.resultCode == RESULT_OK) {
             val ex = AuthorizationException.fromIntent(it.data!!)
             val result = AuthorizationResponse.fromIntent(it.data!!)
-            Log.d("log","test")
             if (ex != null){
                 Log.e("Auth", "launcher: $ex")
             } else {
@@ -62,12 +84,10 @@ class MainActivity : ComponentActivity() {
                         if (token != null) {
                             Log.d("token", token)
                         }
-                        // viewmodel.setToken(token!!)
-
-
-                       // val intent = Intent(this, GithubActivity::class.java)
-                       // startActivity(intent)
-                       // finish()
+                        val sharedPref = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                        val editor = sharedPref.edit()
+                        editor.putString("token", token)
+                        editor.apply()
                     }
                 }
             }
@@ -82,7 +102,7 @@ class MainActivity : ComponentActivity() {
         val config = AuthorizationServiceConfiguration(authorizeUri, tokenUri)
         val request = AuthorizationRequest
             .Builder(config, CLIENT_ID, ResponseTypeValues.CODE, redirectUri)
-            .setScopes()
+            .setScopes("accesslink.read_all")
             .build()
 
         val intent = service.getAuthorizationRequestIntent(request)
@@ -95,15 +115,18 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ComposeTestTheme {
-        Greeting("Android")
+suspend fun getSleep(token: String): String = withContext(Dispatchers.IO) {
+    val obj = URL("https://www.polaraccesslink.com/v3/users/sleep")
+    val connection = obj.openConnection() as HttpURLConnection
+    connection.requestMethod = "GET"
+    connection.setRequestProperty("Authorization", "Bearer $token")
+    val responseCode = connection.responseCode
+    val input = BufferedReader(InputStreamReader(connection.inputStream))
+    val response = StringBuffer()
+    var inputLine: String?
+    while (input.readLine().also { inputLine = it } != null) {
+        response.append(inputLine)
     }
+    input.close()
+    return@withContext response.toString()
 }
