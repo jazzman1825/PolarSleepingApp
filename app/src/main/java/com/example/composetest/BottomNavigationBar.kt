@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,8 +22,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun BottomNavigationBar(navController: NavHostController) {
     val bottomNavItems = listOf(
         BottomNavItem(
-            label = "Sleep Quality",
-            route = "SleepQualityChart",
+            label = "Sleep Details",
+            route = "SleepDetails",
         ),
         BottomNavItem(
             label = "Sleep Hours",
@@ -32,33 +34,25 @@ fun BottomNavigationBar(navController: NavHostController) {
 
     BottomNavigation(
         backgroundColor = colors.primary
+
     ) {
 
-        // observe the backstack
         val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-        // observe current route to change the icon
-        // color,label color when navigated
         val currentRoute = navBackStackEntry?.destination?.route
 
-        // Bottom nav items we declared
         bottomNavItems.forEach { navItem ->
 
-            // Place the bottom nav items
             BottomNavigationItem(
 
-                // it currentRoute is equal then its selected route
                 selected = currentRoute == navItem.route,
 
-                // navigate on click
                 onClick = {
                     navController.navigate(navItem.route)
                 },
 
-                // Icon of navItem
                 icon = {},
 
-                // label
                 label = {
                     Text(text = navItem.label)
                 },

@@ -14,6 +14,7 @@ fun NavigationView(navController: NavHostController,
                    padding: PaddingValues
 ) {
 
+
     NavHost(
         navController = navController,
         startDestination = "SleepTimeChart",
@@ -21,10 +22,11 @@ fun NavigationView(navController: NavHostController,
         builder = {
 
             composable("SleepTimeChart") {
-                SleepTimeChart(values = hours)
+               /* SleepTimeChart(values = hours)*/
+                StackedBarChart(data = stackedData, colors = stackedColors)
             }
-            composable("SleepQualityChart") {
-                SleepQualityChart()
+            composable("SleepDetails") {
+                DetailsView()
             }
         })
 

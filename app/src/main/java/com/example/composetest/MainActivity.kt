@@ -1,6 +1,7 @@
 package com.example.composetest
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.composetest.ui.theme.ComposeTestTheme
+import com.google.gson.Gson
 
 class MainActivity : ComponentActivity() {
 
