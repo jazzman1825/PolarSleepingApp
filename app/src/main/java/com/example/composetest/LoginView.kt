@@ -15,7 +15,7 @@ fun LoginView(){
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(16.dp)) {
         Text("App to track your sleep time")
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { auth() }) {
             Text(text = "Log in")
         }
     }
