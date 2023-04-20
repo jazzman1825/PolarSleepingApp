@@ -17,13 +17,11 @@ fun NavigationView(navController: NavHostController,
 
     NavHost(
         navController = navController,
-        startDestination = "LoginView",
+        startDestination = "SleepTimeChart",
         modifier = Modifier.padding(paddingValues = padding),
         builder = {
 
-            composable("LoginView") {
-                LoginView()
-            }
+
 
             composable("SleepTimeChart") {
                /* SleepTimeChart(values = hours)*/

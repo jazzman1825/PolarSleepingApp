@@ -3,10 +3,7 @@ package com.example.composetest
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -29,6 +27,14 @@ fun StackedBarChart(
         .height(250.dp)
         .fillMaxWidth()
 ) {
+    val navController = rememberNavController()
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        }, content = { padding ->
+            NavigationView(navController = navController, padding = padding)
+        }
+    )
     Column(
         modifier = Modifier
             .fillMaxWidth()

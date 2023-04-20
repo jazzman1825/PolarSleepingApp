@@ -7,11 +7,18 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.composetest.ui.theme.ComposeTestTheme
 import kotlinx.coroutines.*
@@ -19,27 +26,16 @@ import net.openid.appauth.*
 
 class MainActivity : ComponentActivity() {
     private lateinit var service: AuthorizationService
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        service = AuthorizationService(this)
         super.onCreate(savedInstanceState)
         setContent {
             ComposeTestTheme {
-                val navController = rememberNavController()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = colors.background
                 ) {
-                    Scaffold(
-                        bottomBar = {
-                            BottomNavigationBar(navController = navController)
-                        }, content = { padding ->
-                            NavigationView(navController = navController, padding = padding)
-                        }
-                    )
-
-
+                    LoginView()
                 }
             }
         }
@@ -90,8 +86,27 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         service.dispose()
     }
+    @Composable
+    fun LoginView(){
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(16.dp)) {
+            Text("App to track your sleep time")
+            Button(onClick = {
+                auth()
+                val sharedPref = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                val scope = MainScope()
+                val token = sharedPref.getString("token", "default_value")
+                scope.launch {
+                    val sleepData = getSleep(token!!)
+                    Log.d("sleep", sleepData)
+                }
+            }) {
+                Text(text = "Log in")
+            }
+        }
+    }
 }
-
 
 
 
