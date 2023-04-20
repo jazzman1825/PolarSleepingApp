@@ -52,15 +52,7 @@ fun StackedBarChart(
                     fontSize = 16.sp
                 )
                 Row(){
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(30.dp)
-                    ) {
-                        Text(text = "10h")
-                        Text(text = "8h")
-                        Text(text = "6h")
-                        Text(text = "4h")
 
-                    }
                     Canvas(modifier = modifier.fillMaxSize()) {
                         val barWidth = size.width / data.size
 
