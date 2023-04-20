@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
+import org.json.JSONArray
+import org.json.JSONObject
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -35,7 +37,6 @@ val stackedData = listOf(
     listOf(0.2f, 0.3f, 0.5f),
     )
 
-// Example colors
 val stackedColors = listOf(
     listOf(Color(4281558410), Color(4282100124), Color(4287201525)),
     listOf(Color(4281558410), Color(4282100124), Color(4287201525)),
@@ -45,7 +46,6 @@ val stackedColors = listOf(
     listOf(Color(4281558410), Color(4282100124), Color(4287201525)),
     listOf(Color(4281558410), Color(4282100124), Color(4287201525)),
 
-    // Add more colors as needed
 )
 val sleeptime = listOf<Night>(
     Night("12", "5",3)
@@ -57,44 +57,83 @@ val hours = arrayListOf<Float>(
 
 )
 
-val jsonString = "{\n" +
-        "  \"nights\": [\n" +
-        "    {\n" +
-        "      \"polar_user\": \"https://www.polaraccesslink/v3/users/1\",\n" +
-        "      \"date\": \"2020-01-01\",\n" +
-        "      \"sleep_start_time\": \"2020-01-01T00:39:07+03:00\",\n" +
-        "      \"sleep_end_time\": \"2020-01-01T09:19:37+03:00\",\n" +
-        "      \"device_id\": \"1111AAAA\",\n" +
-        "      \"continuity\": 2.1,\n" +
-        "      \"continuity_class\": 2,\n" +
-        "      \"light_sleep\": 1000,\n" +
-        "      \"deep_sleep\": 1000,\n" +
-        "      \"rem_sleep\": 1000,\n" +
-        "      \"unrecognized_sleep_stage\": 1000,\n" +
-        "      \"sleep_score\": 80,\n" +
-        "      \"total_interruption_duration\": 1000,\n" +
-        "      \"sleep_charge\": 3,\n" +
-        "      \"sleep_goal\": 28800,\n" +
-        "      \"sleep_rating\": 3,\n" +
-        "      \"short_interruption_duration\": 500,\n" +
-        "      \"long_interruption_duration\": 300,\n" +
-        "      \"sleep_cycles\": 6,\n" +
-        "      \"group_duration_score\": 100,\n" +
-        "      \"group_solidity_score\": 75,\n" +
-        "      \"group_regeneration_score\": 54.2,\n" +
-        "      \"hypnogram\": {\n" +
-        "        \"00:39\": 2,\n" +
-        "        \"00:50\": 3,\n" +
-        "        \"01:23\": 6\n" +
-        "      },\n" +
-        "      \"heart_rate_samples\": {\n" +
-        "        \"00:41\": 76,\n" +
-        "        \"00:46\": 77,\n" +
-        "        \"00:51\": 76\n" +
-        "      }\n" +
-        "    }\n" +
-        "  ]\n" +
-        "}"
+val jsonString = """
+{
+  "nights": [
+    {
+      "polar_user": "https://www.polaraccesslink/v3/users/1",
+      "date": "2020-01-01",
+      "sleep_start_time": "2020-01-01T00:39:07+03:00",
+      "sleep_end_time": "2020-01-01T09:19:37+03:00",
+      "device_id": "1111AAAA",
+      "continuity": 2.1,
+      "continuity_class": 2,
+      "light_sleep": 1000,
+      "deep_sleep": 1000,
+      "rem_sleep": 1000,
+      "unrecognized_sleep_stage": 1000,
+      "sleep_score": 80,
+      "total_interruption_duration": 1000,
+      "sleep_charge": 3,
+      "sleep_goal": 28800,
+      "sleep_rating": 3,
+      "short_interruption_duration": 500,
+      "long_interruption_duration": 300,
+      "sleep_cycles": 6,
+      "group_duration_score": 100,
+      "group_solidity_score": 75,
+      "group_regeneration_score": 54.2,
+      "hypnogram": {
+        "00:39": 2,
+        "00:50": 3,
+        "01:23": 6
+      },
+      "heart_rate_samples": {
+        "00:41": 76,
+        "00:46": 77,
+        "00:51": 76
+      }
+    },
+    {
+      "polar_user": "https://www.polaraccesslink/v3/users/2",
+      "date": "2020-01-01",
+      "sleep_start_time": "2020-01-01T00:39:07+03:00",
+      "sleep_end_time": "2020-01-01T09:19:37+03:00",
+      "device_id": "1111AAAA",
+      "continuity": 2.1,
+      "continuity_class": 2,
+      "light_sleep": 1000,
+      "deep_sleep": 1000,
+      "rem_sleep": 1000,
+      "unrecognized_sleep_stage": 1000,
+      "sleep_score": 80,
+      "total_interruption_duration": 1000,
+      "sleep_charge": 3,
+      "sleep_goal": 30000,
+      "sleep_rating": 3,
+      "short_interruption_duration": 500,
+      "long_interruption_duration": 300,
+      "sleep_cycles": 6,
+      "group_duration_score": 100,
+      "group_solidity_score": 75,
+      "group_regeneration_score": 54.2,
+      "hypnogram": {
+        "00:39": 2,
+        "00:50": 3,
+        "01:23": 6
+      },
+      "heart_rate_samples": {
+        "00:41": 76,
+        "00:46": 77,
+        "00:51": 76
+      }
+    }
+  ]
+}
+""".trimIndent()
+
+val jsonObject = JSONObject(jsonString)
+val nights = jsonObject["nights"] as JSONArray
 val gson = Gson()
 val nightDataResponse = gson.fromJson(jsonString, NightResponse::class.java)
 

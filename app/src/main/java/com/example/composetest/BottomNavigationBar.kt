@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -51,10 +52,9 @@ fun BottomNavigationBar(navController: NavHostController) {
                     navController.navigate(navItem.route)
                 },
 
-                icon = {},
-
-                label = {
-                    Text(text = navItem.label)
+                icon = {
+                    Text(text = navItem.label,
+                    fontSize = 4.em, fontWeight = FontWeight.Bold,)
                 },
                 alwaysShowLabel = true
             )

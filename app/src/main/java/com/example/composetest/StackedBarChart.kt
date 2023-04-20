@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +26,7 @@ fun StackedBarChart(
     data: List<List<Float>>,
     colors: List<List<Color>>,
     modifier: Modifier = Modifier
-        .height(250.dp) // Set the height to 250dp
+        .height(250.dp)
         .fillMaxWidth()
 ) {
     Column(
@@ -43,6 +44,8 @@ fun StackedBarChart(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(16.dp)
             ){
+                println(nights)
+
                 Text(
                     "Week Statistics",
                     fontWeight = FontWeight.Bold,
@@ -68,7 +71,7 @@ fun StackedBarChart(
                                 drawRect(
                                     color = colors[index][categoryIndex],
                                     topLeft = Offset(index * barWidth, size.height - currentY - barHeight), // Align to bottom x-axis
-                                    size = Size(barWidth, barHeight)
+                                    size = Size(barWidth - 20, barHeight)
                                 )
                                 currentY += barHeight
                             }
@@ -76,7 +79,7 @@ fun StackedBarChart(
                     }
                 }
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(22.dp)
+                    horizontalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
                     Text(text = "Mon")
                     Text(text = "Tue")
@@ -86,6 +89,23 @@ fun StackedBarChart(
                     Text(text = "Sat")
                     Text(text = "Sun")
 
+                }
+                @Composable
+                fun MyCircle(color:Color){
+                    Canvas(modifier = Modifier.size(20.dp), onDraw = {
+                        drawCircle(color = color)
+
+                    })
+                }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    MyCircle(Color(4287201525))
+                    Text(" - Deep Sleep")
+                    MyCircle(Color(4282100124))
+                    Text(" - REM")
+                    MyCircle(Color(4281558410))
+                    Text(" - Light Sleep")
                 }
             }
         }
