@@ -7,18 +7,26 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.composetest.ui.theme.ComposeTestTheme
 import kotlinx.coroutines.*
@@ -31,11 +39,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeTestTheme {
+                val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination?.route
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = colors.background
                 ) {
-                    LoginView()
+                    Scaffold(
+                        bottomBar = {if (currentDestination != "LoginView"){
+                            BottomNavigationBar(navController = navController)}
+                        }, content = { padding ->
+                            NavigationView(navController = navController, padding = padding)
+                        }
+                    )
                 }
             }
         }
@@ -87,24 +105,57 @@ class MainActivity : ComponentActivity() {
         service.dispose()
     }
     @Composable
-    fun LoginView(){
+    fun LoginView(navController: NavController){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(16.dp)) {
-            Text("App to track your sleep time")
+
+            Text("This sleep tracking app is designed to help you monitor your sleep patterns and improve your sleep quality.",
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                color = Color(4281558410),
+                textAlign = TextAlign.Center)
+            Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
-                auth()
-                val sharedPref = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+               // auth()
+               /* val sharedPref = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
                 val scope = MainScope()
                 val token = sharedPref.getString("token", "default_value")
                 scope.launch {
                     val sleepData = getSleep(token!!)
                     Log.d("sleep", sleepData)
-                }
+                }*/
+                navController.navigate("SleepTimeChart")
             }) {
                 Text(text = "Log in")
             }
         }
+    }
+    @Composable
+    fun NavigationView(navController: NavHostController,
+                       padding: PaddingValues
+    ) {
+
+
+        NavHost(
+            navController = navController,
+            startDestination = "LoginView",
+            modifier = Modifier.padding(paddingValues = padding),
+            builder = {
+
+                composable("LoginView") {
+                    LoginView(navController = navController)
+                }
+                composable("SleepTimeChart") {
+                    //Example()
+                    //SleepTimeChart(values = hoursList)
+                    StackedBarChart(data = data)
+                }
+                composable("SleepDetails") {
+                    DetailsView()
+                }
+            })
+
     }
 }
 
